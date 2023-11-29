@@ -1,0 +1,442 @@
+% me=0 student solutions (ps file), me=1 - my solutions (sol file),
+% me=2 - assignment (hw file)
+\def\me{0} \def\num{10} %homework number
+
+\def\due{5 pm on Tuesday, November 28} %due date
+
+\def\course{CSCI-GA.1170-001, 003 Fundamental Algorithms} %course name, changed only once
+
+% **** INSERT YOUR NAME HERE ****
+\def\name{Name}
+
+% **** INSERT YOUR NETID HERE ****
+\def\netid{NetID}
+
+% **** INSERT NETIDs OF YOUR COLLABORATORS HERE ****
+\def\collabs{NetID1, NetID2}
+
+
+\iffalse
+
+INSTRUCTIONS: replace # by the homework number.  (if this is not
+ps#.tex, use the right file name)
+
+Clip out the ********* INSERT HERE ********* bits below and insert
+appropriate LaTeX code.  There is a section below for student macros.
+It is not recommended to change any other parts of the code.
+
+
+\fi
+%
+
+\documentclass[11pt]{article}
+
+% ==== Packages ====
+\usepackage{amsfonts,amsmath,amssymb}
+\usepackage{mathtools}
+\usepackage{latexsym}
+\usepackage{etoolbox}
+\usepackage{totcount}
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{tikz-qtree}
+\usepackage[bottom]{footmisc}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+\usepackage{array}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\usetikzlibrary{arrows}
+
+\setlength{\footskip}{1in} \setlength{\textheight}{8.5in}
+
+\newcommand{\handout}[5]{
+	\renewcommand{\thepage}{#1, Page \arabic{page}}
+	\noindent
+	\begin{center}
+		\framebox{ \vbox{ \hbox to 5.78in { {\bf \course} \hfill #2 }
+				\vspace{4mm} \hbox to 5.78in { {\Large \hfill #5 \hfill} }
+				\vspace{2mm} \hbox to 5.78in { {\it #3 \hfill #4} }
+				\ifnum\me=0
+				\vspace{2mm} \hbox to 5.78in { {\it Collaborators: \collabs
+						\hfill} }
+				\fi
+		} }
+	\end{center}
+	\vspace*{4mm}
+}
+
+\newcounter{pppp}
+\newcounter{pppc}
+\newcommand{\prob}{\arabic{pppp}} %problem number
+\newcommand{\increase}{\stepcounter{pppp}\stepcounter{pppc}} %problem number
+
+% Arguments: Title, Number of Points
+\newcommand{\newproblem}[2]{
+	\ifnum\me=0
+	\ifnum\prob>0 \newpage \fi
+	\increase
+	\restartlist{subtasks}
+	\setcounter{page}{1}
+	\handout{\name{} (\netid), Homework \num, Problem \arabic{pppp}}
+	{\today}{Name: \name{} (\netid)}{Due: \due}
+	{Solutions to Problem \prob\ of Homework \num\ (#2)}
+	\else
+	\increase
+	\restartlist{subtasks}
+	\section*{Problem \num-\prob~(#1) \hfill {#2}}
+	\fi
+}
+
+\newlist{subtasks}{enumerate}{1}
+\setlist[subtasks]{label={(\alph*)},resume}
+
+\newcounter{numpppp}
+\loop
+\stepcounter{numpppp}
+% workaround bug in totcount (means \newtotcounter{points\arabic{pointsct}})
+\begingroup%
+\edef\tempcounter@@name{points\arabic{numpppp}}%
+\expandafter\newtotcounter\expandafter{\tempcounter@@name}%
+\edef\tempcounter@@name{ecpoints\arabic{numpppp}}%
+\expandafter\newtotcounter\expandafter{\tempcounter@@name}%
+\endgroup
+\ifnum \value{numpppp}<500 % max number of tasks supported
+\repeat
+
+% formating of output
+\newcommand{\disppoints}[1]{%
+	\texorpdfstring{(#1~\ifnumequal{#1}{1}{point}{points})}{}
+}
+
+% adds and displays
+\newcommand{\points}[1]{%
+	\texorpdfstring{\addtocounter{points\arabic{pppc}}{#1}\disppoints{#1}}{}%
+}
+\newcommand{\ecpoints}[1]{%
+	\texorpdfstring{\addtocounter{ecpoints\arabic{pppc}}{#1}\ec \disppoints{#1}}{}%
+}
+
+% total points of current task         
+\newcommand{\currentpoints}{% total points of current task   
+	\texorpdfstring{\ifnumequal{\totvalue{ecpoints\arabic{pppc}}}{0}%
+		{\total{points\arabic{pppc}} points}%
+		{\total{points\arabic{pppc}}+\total{ecpoints\arabic{pppc}} points}}{}%
+}
+
+
+\def\squarebox#1{\hbox to #1{\hfill\vbox to #1{\vfill}}}
+\def\qed{\hspace*{\fill}
+	\vbox{\hrule\hbox{\vrule\squarebox{.667em}\vrule}\hrule}}
+\newenvironment{solution}{\begin{trivlist}\item[]{\bf Solution:}}
+	{\qed \end{trivlist}}
+\newenvironment{solsketch}{\begin{trivlist}\item[]{\bf Solution
+			Sketch:}} {\qed \end{trivlist}}
+\newenvironment{code}{\begin{tabbing}
+		12345\=12345\=12345\=12345\=12345\=12345\=12345\=12345\= \kill }
+	{\end{tabbing}}
+
+
+\newcommand{\hint}[1]{({\bf Hint}: {#1})}
+% Put more macros here, as needed.
+\newcommand{\room}{\medskip\ni}
+\newcommand{\brak}[1]{\langle #1 \rangle}
+\newcommand{\bit}[1]{\{0,1\}^{#1}}
+\newcommand{\zo}{\{0,1\}}
+\newcommand{\C}{{\cal C}}
+
+\newcommand{\nin}{\not\in}
+\newcommand{\set}[1]{\{#1\}}
+\renewcommand{\ni}{\noindent}
+\renewcommand{\gets}{\leftarrow}
+\renewcommand{\to}{\rightarrow}
+\newcommand{\assign}{:=}
+
+\newcommand{\AND}{\wedge}
+\newcommand{\OR}{\vee}
+\renewcommand{\And}{\mbox{\bf and }}
+\newcommand{\Or}{\mbox{\bf or }}
+
+\newcommand{\For}{\mbox{\bf for }}
+\newcommand{\To}{\mbox{\bf to }}
+\newcommand{\DownTo}{\mbox{\bf downto }}
+\newcommand{\Do}{\mbox{\bf do }}
+\newcommand{\If}{\mbox{\bf if }}
+\newcommand{\Then}{\mbox{\bf then }}
+\newcommand{\Else}{\mbox{\bf else }}
+\newcommand{\Elseif}{\mbox{\bf else if }}
+\newcommand{\While}{\mbox{\bf while }}
+\newcommand{\Repeat}{\mbox{\bf repeat }}
+\newcommand{\Until}{\mbox{\bf until }}
+\newcommand{\Return}{\mbox{\bf return }}
+\newcommand{\Halt}{\mbox{\bf halt }}
+\newcommand{\Swap}{\mbox{\bf swap }}
+\newcommand{\Ex}[2]{\textrm{exchange } #1 \textrm{ with } #2}
+\newcommand{\Nil}{\mbox{\bf nil}}
+\newcommand{\In}{\mathsf{inOrder}}
+\newcommand{\Post}{\mathsf{postOrder}}
+\newcommand{\Pre}{\mathsf{preOrder}}
+\newcommand{\Root}{\mathsf{root}}
+\newcommand{\Parent}{\mathsf{parent}}
+\newcommand{\Left}{\mathsf{left}}
+\newcommand{\Right}{\mathsf{right}}
+\newcommand{\Middle}{\mathsf{middle}}
+\newcommand{\True}{\textbf{true}}
+\newcommand{\False}{\textbf{false}}
+\newcommand{\Print}{\mbox{\bf print }}
+\newcommand{\ec}{({\bf Extra Credit})}
+\newcommand{\note}{{\bf Note to Graders: }}
+\newcommand{\Note}{\note}
+\newcommand{\Rotate}{\textsc{Rotate}}
+\newcommand{\LRotate}{\textsc{LeftRotate}}
+\newcommand{\RRotate}{\textsc{RightRotate}}
+ \newtheorem{lemma}{Lemma}
+\newcommand{\Gray}{\textsc{gray}}
+\newcommand{\White}{\textsc{white}}
+\newcommand{\Black}{\textsc{black}}
+
+\begin{document}
+
+\ifnum\me=0
+
+% Collaborators (on a per task basis):
+%
+% Task 1: *********** INSERT COLLABORATORS HERE *********** 
+% Task 2: *********** INSERT COLLABORATORS HERE *********** 
+% etc.
+%
+
+\fi
+
+\ifnum\me=1
+
+\handout{PS \num}{\today}{Lecturer: Yevgeniy Dodis}{Due: \due}
+{Solution {\em Sketches} to Problem Set \num}
+
+\fi
+
+\ifnum\me=2
+
+\handout{PS \num}{\today}{Lecturer: Yevgeniy Dodis}{Due: \due}{Problem
+  Set \num}
+
+\fi
+
+
+\newproblem{Failure Nodes via BFS}{10 points}
+
+You have just assumed the role of network administrator for a financial company with offices across the globe. Your network is represented as an undirected, connected graph $G=(V,E)$ with $n$ servers connected by $m$ edges. 
+You have determined that the graph is indeed connected. However, you realize that there are not enough redundancies to ensure recovery from failure. You have a limited budget so you decide that the best you can do is to avoid any single point of failure. A single point of failure is a server which when it goes down disconnects the network into different components.
+
+\begin{subtasks}
+	\item \points{3} 
+	You want to test if a given node $w$ is
+	a single point of failure. You will do this by modifying
+	the standard BFS algorithm (reproduced below for your reference).
+	Suitably modify the algorithm to write the pseudocode
+	for {\sc IsSPOF-BFS}$(G,s,w)$ that returns $\True$ if $w$
+	is a single point of failure and \False\ otherwise. 
+	Here $s\neq w$ is an arbitrary node from which you begin
+	exploring. 
+	Do not forget to justify the correctness of your algorithm
+	and state the runtime. 
+	\begin{code}
+		{\sc BFS}$(G,s)$\\
+		1 \> \For each vertex $u\in$ $G.V-\{s\}$\\
+		2 \> \> $u.color=\White$\\
+		3 \> \> $u.d=\infty$\\
+		4 \> \> $u.\pi=\Nil$\\
+		5 \> $s.color=\Gray$\\
+		6 \> $s.d=0$\\
+		7 \> $s.\pi=\Nil$\\
+		8 \> $Q=\emptyset$\\
+		9 \> {\sc Enqueue}$(Q,s)$\\
+		10 \> \While $Q\neq \emptyset$\\
+		11 \> \> $u=\textsc{Dequeue}(Q)$\\
+		12 \> \> \For each $v\in G.Adj[u]$\\
+		13 \> \> \> \If $v.color==\White$\\
+		14 \> \> \> \> $v.color=\Gray$\\
+		15 \> \> \> \> $v.d=u.d+1$\\
+		16 \> \> \> \> $v.\pi=u$\\
+		17 \> \> \> \> {\sc Enqueue}$(Q,v)$\\
+		18 \> \> $u.color=\Black$\\
+	\end{code}
+	
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+	
+	\item \points{2}
+	Use Part (a) to identify all the single
+	points of failure of graph $G$. What is the runtime of your algorithm?
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+	
+	\item \points{5}
+	You are given a	node $u$ and are told that there exists
+	a node $w$ such that $\delta(u,w)>n/2$. Here $\delta(u,v)$ denotes the 
+	shortest distance (in the number of edges) between $u$ and $v$.
+	This means that the two nodes are really far apart.
+	You have an intuition that there
+	might be a single point of failure that would
+	disrupt communication between $u$ and $w$ given
+	the large distance between them. 
+	Specifically, you fear that there is a distinct
+	server $v$ which breaks
+	all communication paths between servers $u$ and $v$ when it
+	crashes.
+	
+	Show that your intuition is right. In other words,
+	show that there exists such a server $v$ which will
+	disrupt all paths between servers $u$ and $w$ when it goes
+	down. Give an algorithm running in time $O(m+n)$ 
+	to find the node. 
+	You	may assume a suitable graph representation and 
+	also use any algorithm discussed in lecture in 
+	a black box manner. Do not forget to justify
+	the correctness of your algorithm and the runtime. 
+	\hint{Run BFS from $u$.}
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+\end{subtasks}
+
+
+\newproblem{Tournaments}{\currentpoints}
+
+A tournament is a directed graph $G=(V,E)$ built from a complete undirected graph
+$H$ by assigning directions to each edge in $H=(V,E')$. In other words, 
+for all $u,v\in V$ if $(u,v)\in E$ then $(v,u)\not\in E$. 
+
+\begin{subtasks}
+	\item \points{1}
+	Show that adding any edge to $G$ would create a cycle. 
+	\hint{In a directed graph, any path (of length larger than $0$) that starts and ends at the same node is a cycle.}
+	
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+	
+	\item \points{6}
+	Present a $O(|V|^2)$ recursive algorithm
+	that prints a path that visits every vertex exactly
+	once. Assume the graph to be given as an adjacency matrix.
+	Precisely describe the algorithm either in words or using pseudocode. 
+	Prove the correctness of your algorithm. Also, derive
+	a recurrence relation for the worst-case running
+	time of your algorithm and state its solution. 
+	\hint{Consider a divide-and-conquer approach.}
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+\end{subtasks}
+Consider the following definition of $G=(V,E)$ where $V=\{1,2,\ldots,n\}$
+and $E$ contains every edge of the form $(j,i)$ where $0<i<j\leq n$.
+It is easy to see that $G$ is a valid tournament. 
+\begin{subtasks}
+	\item \points{1}
+	Prove that $G$ is a directed acyclic graph (DAG). 
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+	
+	\item \points{3}
+	Now observe that $G$ has one node of in-degree
+	0 and this node is $n$. Characterize or draw the DFS Tree produced
+	by the invocation {\sc DFS-Visit}$(n)$ assuming that the
+	algorithm processes each neighbor of a node $v$ in:
+	\begin{itemize}
+		\item ascending order
+		\item descending order
+	\end{itemize}
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+	
+	\item \points{4}
+	Now, assume that the version of DFS does not use
+	any markings to avoid duplicate processing. In other words,
+	each node is processed if it is reached. Now, let $T(n)$
+	be the number of time that this version of DFS visits
+	vertex 1 when {\sc DFS-Visit}$(n)$ is invoked.
+	Derive a recurrence relation for $T(n)$. Show the
+	necessary steps and solve the recurrence relation
+	to get an exact value for $T(n)$. 
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+\end{subtasks}
+
+
+
+
+
+
+\newproblem{Roots of Cyclicity}{\currentpoints}
+
+We can define the root $s$ of a directed graph $G=(V,E)$ 
+as the node from which every other node is reachable.
+In other words, $\forall\ v\in V$ there is 
+a path from $s$ to $v$. Assume that $G$ does
+not contain nodes which have both in-degree and out-degree 0. 
+
+For each of the statement given below either prove
+that the statement is true or construct a counterexample
+to show that the statement is false. Your counterexample
+should have the least number of nodes possible and at least
+one directed edge. 
+
+\begin{subtasks}
+	\item \points{2} 
+	Every DAG $G$ must contain a root. 
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+	
+	\item \points{2} 
+	If $s$ is the root of a DAG, then it must have in-degree 0. 
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+	
+	\item \points{3}
+	In a DAG, if there exists exactly one node $s$ of in-degree 0, then $s$ is the root. 
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+	
+	\item \points{2}
+	Let us assume that $s$ is the root of $G$. 
+	Then the following algorithm can be used to determine if $G$ is a 
+	DAG:
+	\begin{itemize}
+		\item We begin with BFS starting at $s$. 
+		\item If we ever hit a node twice, we have a cycle and the graph 
+		is not a DAG.
+		\item If we hit every node once, then the graph is a DAG. 
+	\end{itemize}
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+	
+	\item \ecpoints{2}
+	How would your answer to part (d) change if the graph $G$ was undirected?
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+\end{subtasks}
+
+
+
+
+
+
+
+
+\end{document}
+
+
