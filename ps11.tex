@@ -1,0 +1,552 @@
+% me=0 student solutions (ps file), me=1 - my solutions (sol file),
+% me=2 - assignment (hw file)
+\def\me{0} \def\num{11} %homework number
+
+\def\due{5 pm on Tuesday, December 05} %due date
+
+\def\course{CSCI-GA.1170-001, 003 Fundamental Algorithms} %course name, changed only once
+
+% **** INSERT YOUR NAME HERE ****
+\def\name{Name}
+
+% **** INSERT YOUR NETID HERE ****
+\def\netid{NetID}
+
+% **** INSERT NETIDs OF YOUR COLLABORATORS HERE ****
+\def\collabs{NetID1, NetID2}
+
+
+\iffalse
+
+INSTRUCTIONS: replace # by the homework number.  (if this is not
+ps#.tex, use the right file name)
+
+Clip out the ********* INSERT HERE ********* bits below and insert
+appropriate LaTeX code.  There is a section below for student macros.
+It is not recommended to change any other parts of the code.
+
+
+\fi
+%
+
+\documentclass[11pt]{article}
+
+% ==== Packages ====
+\usepackage{amsfonts,amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{latexsym}
+\usepackage{etoolbox}
+\usepackage{totcount}
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{tikz-qtree}
+\usepackage[bottom]{footmisc}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+\usepackage{array}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\usetikzlibrary{arrows}
+
+\setlength{\footskip}{1in} \setlength{\textheight}{8.5in}
+
+\newcommand{\handout}[5]{
+	\renewcommand{\thepage}{#1, Page \arabic{page}}
+	\noindent
+	\begin{center}
+		\framebox{ \vbox{ \hbox to 5.78in { {\bf \course} \hfill #2 }
+				\vspace{4mm} \hbox to 5.78in { {\Large \hfill #5 \hfill} }
+				\vspace{2mm} \hbox to 5.78in { {\it #3 \hfill #4} }
+				\ifnum\me=0
+				\vspace{2mm} \hbox to 5.78in { {\it Collaborators: \collabs
+						\hfill} }
+				\fi
+		} }
+	\end{center}
+	\vspace*{4mm}
+}
+
+\newcounter{pppp}
+\newcounter{pppc}
+\newcommand{\prob}{\arabic{pppp}} %problem number
+\newcommand{\increase}{\stepcounter{pppp}\stepcounter{pppc}} %problem number
+
+% Arguments: Title, Number of Points
+\newcommand{\newproblem}[2]{
+	\ifnum\me=0
+	\ifnum\prob>0 \newpage \fi
+	\increase
+	\restartlist{subtasks}
+	\setcounter{page}{1}
+	\handout{\name{} (\netid), Homework \num, Problem \arabic{pppp}}
+	{\today}{Name: \name{} (\netid)}{Due: \due}
+	{Solutions to Problem \prob\ of Homework \num\ (#2)}
+	\else
+	\increase
+	\restartlist{subtasks}
+	\section*{Problem \num-\prob~(#1) \hfill {#2}}
+	\fi
+}
+
+\newlist{subtasks}{enumerate}{1}
+\setlist[subtasks]{label={(\alph*)},resume}
+
+\newcounter{numpppp}
+\loop
+\stepcounter{numpppp}
+% workaround bug in totcount (means \newtotcounter{points\arabic{pointsct}})
+\begingroup%
+\edef\tempcounter@@name{points\arabic{numpppp}}%
+\expandafter\newtotcounter\expandafter{\tempcounter@@name}%
+\edef\tempcounter@@name{ecpoints\arabic{numpppp}}%
+\expandafter\newtotcounter\expandafter{\tempcounter@@name}%
+\endgroup
+\ifnum \value{numpppp}<500 % max number of tasks supported
+\repeat
+
+% formating of output
+\newcommand{\disppoints}[1]{%
+	\texorpdfstring{(#1~\ifnumequal{#1}{1}{point}{points})}{}
+}
+
+% adds and displays
+\newcommand{\points}[1]{%
+	\texorpdfstring{\addtocounter{points\arabic{pppc}}{#1}\disppoints{#1}}{}%
+}
+\newcommand{\ecpoints}[1]{%
+	\texorpdfstring{\addtocounter{ecpoints\arabic{pppc}}{#1}\ec \disppoints{#1}}{}%
+}
+\newcommand{\mixedpoints}[2]{%
+	\texorpdfstring{%
+		\addtocounter{points\arabic{pppc}}{#1}%
+		\addtocounter{ecpoints\arabic{pppc}}{#2}%
+		(#1 (+#2) points)
+	}{}%
+}
+
+% total points of current task         
+\newcommand{\currentpoints}{% total points of current task   
+	\texorpdfstring{\ifnumequal{\totvalue{ecpoints\arabic{pppc}}}{0}%
+		{\total{points\arabic{pppc}} points}%
+		{\total{points\arabic{pppc}}+\total{ecpoints\arabic{pppc}} points}}{}%
+}
+
+
+\def\squarebox#1{\hbox to #1{\hfill\vbox to #1{\vfill}}}
+\def\qed{\hspace*{\fill}
+	\vbox{\hrule\hbox{\vrule\squarebox{.667em}\vrule}\hrule}}
+\newenvironment{solution}{\begin{trivlist}\item[]{\bf Solution:}}
+	{\qed \end{trivlist}}
+\newenvironment{solsketch}{\begin{trivlist}\item[]{\bf Solution
+			Sketch:}} {\qed \end{trivlist}}
+\newenvironment{code}{\begin{tabbing}
+		12345\=12345\=12345\=12345\=12345\=12345\=12345\=12345\= \kill }
+	{\end{tabbing}}
+
+
+\newcommand{\hint}[1]{({\bf Hint}: {#1})}
+% Put more macros here, as needed.
+\newcommand{\room}{\medskip\ni}
+\newcommand{\brak}[1]{\langle #1 \rangle}
+\newcommand{\bit}[1]{\{0,1\}^{#1}}
+\newcommand{\zo}{\{0,1\}}
+\newcommand{\C}{{\cal C}}
+
+\newcommand{\nin}{\not\in}
+\newcommand{\set}[1]{\{#1\}}
+\renewcommand{\ni}{\noindent}
+\renewcommand{\gets}{\leftarrow}
+\renewcommand{\to}{\rightarrow}
+\newcommand{\assign}{:=}
+
+\newcommand{\AND}{\wedge}
+\newcommand{\OR}{\vee}
+\renewcommand{\And}{\mbox{\bf and }}
+\newcommand{\Or}{\mbox{\bf or }}
+
+\newcommand{\For}{\mbox{\bf for }}
+\newcommand{\To}{\mbox{\bf to }}
+\newcommand{\DownTo}{\mbox{\bf downto }}
+\newcommand{\Do}{\mbox{\bf do }}
+\newcommand{\If}{\mbox{\bf if }}
+\newcommand{\Then}{\mbox{\bf then }}
+\newcommand{\Else}{\mbox{\bf else }}
+\newcommand{\Elseif}{\mbox{\bf else if }}
+\newcommand{\While}{\mbox{\bf while }}
+\newcommand{\Repeat}{\mbox{\bf repeat }}
+\newcommand{\Until}{\mbox{\bf until }}
+\newcommand{\Return}{\mbox{\bf return }}
+\newcommand{\Halt}{\mbox{\bf halt }}
+\newcommand{\Swap}{\mbox{\bf swap }}
+\newcommand{\Ex}[2]{\textrm{exchange } #1 \textrm{ with } #2}
+\newcommand{\Nil}{\mbox{\bf nil}}
+\newcommand{\In}{\mathsf{inOrder}}
+\newcommand{\Post}{\mathsf{postOrder}}
+\newcommand{\Pre}{\mathsf{preOrder}}
+\newcommand{\Root}{\mathsf{root}}
+\newcommand{\Parent}{\mathsf{parent}}
+\newcommand{\Left}{\mathsf{left}}
+\newcommand{\Right}{\mathsf{right}}
+\newcommand{\Middle}{\mathsf{middle}}
+\newcommand{\True}{\textbf{true}}
+\newcommand{\False}{\textbf{false}}
+\newcommand{\Print}{\mbox{\bf print }}
+\newcommand{\ec}{({\bf Extra Credit})}
+\newcommand{\note}{{\bf Note to Graders: }}
+\newcommand{\Note}{\note}
+\newcommand{\Rotate}{\textsc{Rotate}}
+\newcommand{\LRotate}{\textsc{LeftRotate}}
+\newcommand{\RRotate}{\textsc{RightRotate}}
+ \newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\Gray}{\textsc{gray}}
+\newcommand{\White}{\textsc{white}}
+\newcommand{\Black}{\textsc{black}}
+
+\begin{document}
+
+
+
+
+
+\ifnum\me=0
+
+% Collaborators (on a per task basis):
+%
+% Task 1: *********** INSERT COLLABORATORS HERE *********** 
+% Task 2: *********** INSERT COLLABORATORS HERE *********** 
+% etc.
+%
+
+\fi
+
+\ifnum\me=1
+
+\handout{PS \num}{\today}{Lecturer: Yevgeniy Dodis}{Due: \due}
+{Solution {\em Sketches} to Problem Set \num}
+
+\fi
+
+\ifnum\me=2
+
+\handout{PS \num}{\today}{Lecturer: Yevgeniy Dodis}{Due: \due}{Problem
+  Set \num}
+
+\fi
+
+
+
+
+\newproblem{Greedy Topological Sort}{\currentpoints}
+
+
+Let $G = (V,E)$ be a directed graph and let $n=|V|$ and $m=|E|$ denote
+the number of vertices and edges, respectively.
+Consider the following greedy algorithm for topological
+sort of $G$: 
+``Find a vertex $v$ with no outgoing
+edges. If no such $v$ exists, output `cyclic'. Else put $v$ as the
+last vertex in the topological sort, remove $v$ from $G$ (by also
+removing all incoming edges to $v$), and recurse on the remaining
+graph $G'$ on $(n-1)$ vertices. For the empty graph, end the algorithm.''.
+
+
+
+In a first part, we will prove the above algorithm to be correct.
+
+\begin{subtasks}
+	
+	\item \points{3}
+	Let $G$ to be acyclic with $n > 0$, i.e., non-empty. Show that $G$ has at least
+	one vertex $v$ having no outgoing edges. 
+	\hint{Do a proof by contradiction.}
+	
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+	
+	
+	\item \points{2}
+	Now prove that the algorithm produces output ``cyclic'' if an only if there 
+	is no topological sorting. \hint{Use part~(a) as part of an induction proof over the number of vertices $n$.}
+	
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+	
+	
+	\item \points{2}
+	Now assume $G$ to be acyclic. Conclude the correctness proof by showing that the algorithm outputs a valid topological sorting.
+	
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+\end{subtasks}
+
+
+In the following, we want to efficiently implement to above algorithm.
+To this end, assume $G = (V,E)$ to be given in adjacency-list format, where each
+adjacency list stores the \emph{outgoing} edges.
+
+\begin{subtasks}
+	\item \points{3}
+	Show how to implement to above algorithm in time $O(n (m+n))$.
+	\hint{Assume that you can set flags $v.color$ on each node $v \in V$ indicating whether the 
+		node has already been output, i.e., removed from the graph. Do not try to explicitly construct $G'$ for the recursive invocation.} 
+	
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+	
+	
+	\item \points{4}
+	Now assume that the graph $G$ is given in an adjacency-list format that stores the \emph{incoming} edges instead of the outgoing ones. (Converting between those two formats can be done in time $O(n+m)$.) 
+	Show how to implement the algorithm in time $O(n^2)$ in this case. 
+	\hint{You may want to preprocess the graph and store some information at each node that then gets updated through the algorithm.} 
+	
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+\end{subtasks}
+
+
+
+\newproblem{Cool Orderings}{\currentpoints}
+
+Recall that in the algorithm for computing the strongly connected
+components (SCCs) of a graph $G = (V,E)$, the second DFS on the transpose
+$G^T$ (i.e., on the graph with reversed edges) processes the nodes in decreasing order of their finishing time (w.r.t.\ the first DFS).
+
+Define an ordering $v_1,\ldots,v_n$ of the vertices of $G$ to be
+\emph{cool} if
+\begin{itemize}
+	\item the vertices can be split up into $k$ groups corresponding to
+	the $k$ SCCs of $G$ by appropriately inserting $k-1$ separators,
+	i.e., if there exist $i_1,\ldots,i_{k-1}$ such that the SCCs are
+	$\set{v_1,\ldots,v_{i_1}},\set{v_{i_1+1},\ldots,v_{i_2}},\ldots,
+	\set{v_{i_{k-1}+1},\ldots,v_n}$, and
+	\item the $k$ groups are in topological order (w.r.t.\ the SCC
+	graph).
+\end{itemize}
+For example, assume $G$ has vertices $V = \set{a,b,c,d,e}$ and edges
+$E= \set{(a,c),(c,a),(a,d)} \cup \set{(b,e),(e,b),(b,d)}$.  Then, $G$
+has SCCs $C_1 = \set{a,c}$, $C_2 = \set{b,e}$, and $C_3 = \set{d}$.
+Moreover, the SCC graph of $G$ has edges $\set{(C_1,C_3),(C_2,C_3)}$.
+Hence, $a,c,e,b,d$ and $b,e,a,c,d$ are examples of cool orderings,
+whereas $b,a,c,d,e$ and $a,b,c,d,e$ are uncool.
+
+\begin{subtasks}
+	\item \points{3}
+	Prove or disprove: sorting the vertices in decreasing order of their finishing time (of an arbitrary DFS) is always cool.
+	
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+\end{subtasks}
+In the following, we want to prove that if the DFS is run on $G^T$ 	w.r.t.\ some cool ordering, the resulting DFS trees are the SCCs of $G$. To this end, we adapt the proof from the book accordingly.
+Recall that $f(v)$ denotes the finishing time of node $v$ and for a component $U \subseteq V$, $f(U) = \max_{v \in U} f(v)$ denotes the last finishing time of any node in the component.
+
+\begin{subtasks}
+	\item \points{4} 
+	Adapt the following lemma from the book to be about cool orderings instead of finishing times and prove the resulting lemma.
+	\begin{lemma}[Lemma 20.14]
+		Let $C$ and $C'$ be distinct strongly connected components in directed graph $G = (V,E)$. Suppose that there is an edge $(u,v) \in E$, where $u \in C'$ and $v \in C$. Then $f(C') > f(C)$.
+	\end{lemma}
+	\hint{Replace the function $f$ with an appropriate function $g$ and adjust the lemma where as needed.}
+	
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+\end{subtasks}
+
+\noindent
+Assuming you have solved subtask (b) correctly, one can adapt Corollary 20.15 and Theorem 20.16 verbatim (replacing $f$ with $g$) and obtain a proof that using a cool ordering indeed works for finding the SCCs. 
+
+
+
+
+
+
+\newproblem{Flights of Fancy}{\currentpoints}
+
+
+You are hired as the technical
+consultant for an airlines company
+called ``Untied'' to help improve
+their connectivity and also their
+profit margins. You are given
+a weighted, undirected graph $G=(V,E)$ where
+each node represents the cities
+where Untied serves and an
+edge $(u,v)$ denotes that there
+is a flight service from $u$
+to $v$ and from $v$ to $u$. Let $|V|=n,|E|=m$. 
+The graph
+need not be connected. In
+parts (a)-(e), the weight corresponds
+to the cost of operating that route. 
+
+In a preliminary survey, you identify
+a potential problem that is causing
+reduced profit: Some customers have managed to find
+hacker-fares which exploit indirect routings. That is,
+they manage to bypass find cheaper fares from $u$ to $v$
+(where a direct flight exists) via a sequence of one or more
+intermediate stops. Therefore, you are asked to figure out 
+whether your route network is a \emph{spanning tree}. 
+
+\begin{subtasks}
+	\item \points{5}
+	Present an $O(n)$ algorithm where $|V|=n$ to determine if
+	the given graph $G$ is a spanning tree
+	or not. More formally,
+	
+	\begin{center}
+		Input: A weighted, undirected graph $G=(V,E)$
+		
+		Output: Print $\True$ iff $G$ is a spanning tree,
+		else print a possible cycle, i.e., the vertices in this cycle
+		
+		Constraint: $O(n)$-time algorithm
+		
+	\end{center}
+	
+	Clearly, describe your
+	algorithm. Do not forget to
+	argue the correctness and prove the running time. 
+	
+	You can invoke any algorithm discussed in
+	the lecture, as a black-box. You can also
+	modify these algorithms. Clearly state these
+	modifications and justify the impact of
+	these changes on the running time and correctness
+	of the algorithm. 
+	\hint{It is easy to define an $O(m+n)$
+		algorithm that works even for directed graphs. However,
+		here we want you to get an algorithm that
+		runs in time $O(n)$ which is a huge save
+		if $m>>n$. This algorithm relies on
+		the fact that $G$ is undirected.}
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+\end{subtasks}
+
+\noindent
+Now, you have determined that $G$
+is not a spanning tree but $G$ is connected.
+It makes sense to produce a spanning
+tree whose weight is minimal. You can run
+Kruskal's algorithm to produce such a spanning
+tree. The pseudocode is provided below:
+
+\begin{code}
+	{\sc Kruskal}$(G,w)$\\
+	1 \> $A=\emptyset$\\
+	2 \> \For each vertex $v\in G.V$\\
+	3 \> \> {\sc Make-Set}$(v)$\\
+	4 \> sort the edges of $G.E$ into non-decreasing order by weight $w$\\
+	5 \> \For each $(u,v)$ from the sorted list\\
+	6 \> \> \If {\sc Find-Set}$(u)\neq\textsc{Find-Set}(v)$\\	
+	7 \> \> \> $A=A\cup\{(u,v)\}$\\
+	8 \> \> \> {\sc Uniion}$(u,v)$\\
+	9 \> \Return $A$
+\end{code}
+
+\begin{subtasks}
+	\item \points{6}
+	In this question, you are asked to account for another constraint:
+	routes cannot be removed willy-nilly, especially because
+	of contracts.  
+	
+	Specifically, you are given
+	this set of routes as $F=(V',E')$ which is \emph{a forest of edges}.
+	Now, you are asked to produce the best
+	possible spanning tree such that $F$ is always included
+	in the resulting tree. More formally,
+	
+	\begin{center}
+		Input: A weighted, connected, undirected graph $G=(V,E)$,
+		a forest $F=(V',E')$ that is a sub-graph of $G$, i.e., $V' \subseteq V$ and $E' \subseteq E$.
+		
+		Output: Return the best possible spanning tree subject
+		to the constraint below.
+		
+		Constraint: Each edge in $F$ is included in the
+		spanning tree. 
+		
+	\end{center}
+	
+	
+	Modify the pseudocode {\sc Kruskal}$(G,w)$ to
+	{\sc Kruskal}$(G,F,w)$ that produces the new
+	spanning tree. You will do this by inserting
+	no more than five lines of code to the pseudocode
+	provided earlier. Your algorithm should still run in
+	$O(|E|\log |V|)$.
+	
+	Do not forget to argue the correctness and justify the running time. 
+	\hint{Use a theorem from the book for correctness.}
+	
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+\end{subtasks}
+
+
+
+
+\newproblem{Least Maximal-Weight Edge}{\currentpoints}
+
+Recall from the lecture that the minimum-spanning-tree (MST) problem
+is to find, in some undirected graph~$G$, a spanning sub-tree $T$ with
+the smallest possible sum $\sum_{e\in T} w(e)$ of edge weights.
+Consider the related problem of finding a spanning sub-tree $T'$ with
+the least maximum edge weight $\max_{e\in T'} w(e)$.
+
+\begin{subtasks}
+	\item \points{4}
+	Assume the edge weights are unique.  Argue why
+	Kruskal's algorithm outputs a spanning tree $T$ that is also a
+	(optimal) solution to the modified problem.  You may use the fact
+	that Kruskal is a correct algorithm.
+	
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+	
+	
+	\item \mixedpoints{2}{2}
+	Find a graph that contains a non-MST spanning tree $T$ with least maximum edge weight.  
+	That is $T$ is a (optimal) solution to the modified problem but not an MST.  For
+	\textbf{extra credit}, the edge weights must be unique.
+	
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+	
+	\item \points{4} 
+	Consider now graphs with edge weights that are not necessarily unique.  
+	Show that any (optimal) solution $T$ to the	MST problem is also an (optimal) 
+	solution to the modified problem.
+	
+	\noindent
+	\hint{Do not use a specific algorithm's (such as Kruskal's or
+		Prim's) correctness since they output some specific MST out of
+		possibly many. Give a general argument instead.}
+	
+	\ifnum\me<2
+\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+	\fi
+\end{subtasks}
+
+
+
+
+
+\end{document}
