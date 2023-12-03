@@ -7,10 +7,10 @@
 \def\course{CSCI-GA.1170-001, 003 Fundamental Algorithms} %course name, changed only once
 
 % **** INSERT YOUR NAME HERE ****
-\def\name{Name}
+\def\name{Atmaj Koppikar}
 
 % **** INSERT YOUR NETID HERE ****
-\def\netid{NetID}
+\def\netid{ark9238}
 
 % **** INSERT NETIDs OF YOUR COLLABORATORS HERE ****
 \def\collabs{NetID1, NetID2}
@@ -267,7 +267,16 @@ In a first part, we will prove the above algorithm to be correct.
 	\hint{Do a proof by contradiction.}
 	
 	\ifnum\me<2
-\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+\begin{solution}
+		An acyclic directed graph can be topologically sorted. As in in the nodes in the graph can be arranged in a line such that all edges
+		move from left to right. eg. $A->B->C->D B->E$ In this case vertices D and E have no outgoing edges.
+
+		If any of them did have outgoing edges that point towards a node to their left then that would cause a cycle. eg. $A->B->C->D B->E E->A$
+		If E did not have any outgoing edges then the graph would be acyclic. It is possible for E to have an edge and still be acyclic. eg. $A->B->C->D B->E E->C$.
+		 In this case only D has no outgoing edges and still the graph is acyclic. Addingg an edge from D to any other edge would cause a cycle.
+
+		This means that at least one vertex must have no out-going edges for a graph to be acyclic. 
+\end{solution}
 	\fi
 	
 	
@@ -276,7 +285,25 @@ In a first part, we will prove the above algorithm to be correct.
 	is no topological sorting. \hint{Use part~(a) as part of an induction proof over the number of vertices $n$.}
 	
 	\ifnum\me<2
-\begin{solution}   INSERT YOUR SOLUTION HERE   \end{solution}
+\begin{solution} 
+As given in part a, a vertex in an acyclic graph is placed to the right of vertices that point to it in the topological order. 
+The rightmost vertex has no outgoing edges. 
+
+Base Case :
+
+A graph with one vertex is acyclic. In topological order the last vertex has no outgoing edges.
+
+Inductive CAse : 
+
+Assuming that a topologically sorted graph has no outgoing edges from the last vertex.
+
+For every new node added to the sort, if it has no outgoing edges to any vertex already in the sort, then the graph is topologically sorted.
+ Iterate through every vertex in the graph and if it satisfies the condition then add it to the sort.
+
+AFter processing all the vertices if the sort has vertex with no outgoing edges and it is placed last then the graph is acyclic.
+
+Therefore the algorithm will only output cyclic if and only if there is no vertex with no outgoing edges because then the topological sort would not be possible.
+\end{solution}
 	\fi
 	
 	
